@@ -32,7 +32,9 @@ movies=[
     {'title': 'WALL-E', 'year': '2008'},
     {'title': 'The Pork of Music', 'year': '2012'},
 ]
+
 login_manager.login_view = 'login'
+login_manager.login_message = 'Please login.'
 
 class User(db.Model, UserMixin):
     id=db.Column(db.Integer, primary_key=True)
@@ -145,7 +147,7 @@ def edit(movie_id):
         movie.title = title
         movie.year = year
         db.session.commit()
-        flash('Item flashed.')
+        flash('Item updated.')
         return redirect(url_for('index'))
 
     return render_template('edit.html', movie = movie)
@@ -224,7 +226,7 @@ def admin(username, password):
         user.set_password(password)
     else:
         click.echo('Creating user...')
-        user = User(username=username, name='Heisenberg')
+        user = User(username=username, name='Admin')
         user.set_password(password)
         db.session.add(user)
 
