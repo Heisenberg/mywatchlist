@@ -1,6 +1,8 @@
 import unittest
 
-from app import app, db, Movie, User, forge, initdb
+from watchlist import app, db
+from watchlist.models import Movie, User
+from watchlist.commands import forge, initdb
 
 class WatchlistTestCase(unittest.TestCase):
     def setUp(self):
@@ -174,6 +176,18 @@ class WatchlistTestCase(unittest.TestCase):
         data = response.get_data(as_text=True)
         self.assertNotIn('Login success.', data)
         self.assertIn('Invalid input.', data)
+
+    def test_logout(self):
+        self.login()
+
+        response = self.client.get('/logout', follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('Goodbye.', data)
+        self.assertNotIn('Logout', data)
+        self.assertNotIn('Settings', data)
+        self.assertNotIn('Delete', data)
+        self.assertNotIn('Edit', data)
+        self.assertNotIn('<form method="post">', data)
 
     def test_settings(self):
         self.login()
